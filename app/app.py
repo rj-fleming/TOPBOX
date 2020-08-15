@@ -2,7 +2,8 @@ from bson import json_util, ObjectId
 from flask import Flask
 
 from app.helpers import mongo_client
-
+from dateutil.parser import parse
+from datetime import datetime
 API_VERSION = '1.0'
 
 app = Flask(__name__)
@@ -36,17 +37,7 @@ def engagements_by_id(engagement_id):
     engagement_object_id = ObjectId(engagement_id)
     return json_util.dumps(db.engagements.find_one({'_id': engagement_object_id}))
 
-
-@app.route('/interactions/<interaction_id>')
-def interactions(interaction_id):
-    # TODO: Modify this endpoint according to problem statement!
-    interaction_object_id = ObjectId(interaction_id)
-    startDate = request.args.get('startDate')
-    endDate = request.args.get('endDate')
-    return json_util.dumps(db.interactions.find_one({'_id': interaction_object_id}, {'startDate': startDate}, {'endDate': endDate}))
-
-
-@app.route('/interactions/<interaction_id>')
-def interactions_by_id(interaction_id):
-    interaction_object_id = ObjectId(interaction_id)
-    return json_util.dumps(db.interactions.find_one({'_id': interaction_object_id}))
+@app.route('/interactions/<engagement_id>')
+def interactions(engagement_id):
+    engagement_object_id = ObjectId(engagement_id)
+    return json_util.dumps(db.interactions.find({'engagementId': engagement_object_id}))
